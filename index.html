@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <button id="fetch-data">Fetch Data</button>
+
+    <script>
+      const urls = [
+        'https://dummyjson.com/posts',
+        'https://dummyjson.com/products',
+        'https://dummyjson.com/todos'
+      ];
+  
+      function fetchDataWithTimeout(url, timeout) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            fetch(url)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                resolve(data);
+              })
+              .catch(error => {
+                reject(error);
+              });
+          }, timeout);
+        });
+      }
+  
+      function promiseAPI1() {
+        return fetchDataWithTimeout(urls[0], 1000);
+      }
+  
+      function promiseAPI2() {
+        return fetchDataWithTimeout(urls[1], 2000);
+      }
+  
+      function promiseAPI3() {
+        return fetchDataWithTimeout(urls[2], 3000);
+      }
+  
+      const fetchButton = document.getElementById('fetch-data');
+  
+      fetchButton.addEventListener('click', () => {
+        promiseAPI1()
+          .then(promiseAPI2)
+          .then(promiseAPI3)
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      });
+    </script>
+
+</body>
+</html>
